@@ -1,6 +1,6 @@
 {{ define "main" }}
   <main id="main">
-    <h1>标签</h1>
+    <h1>{{ .Title }}</h1>
     <ul class="patterns-list">
     {{ range .Pages.ByPublishDate.Reverse }}
       <li>
