@@ -1,28 +1,37 @@
 {{ if .Site.Params.enableGitalk }}
 <div id="gitalk-container"></div>
+<button id="disqus-button" onclick="showComments()">Comments</button>
 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
 <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
 <script>
+
   function hashCode(s) {
     for (var i = 0, h = 0; i < s.length; i++)
       h = Math.imul(31, h) + s.charCodeAt(i) | 0;
     return h;
   }
-  const gitalk = new Gitalk({
-    clientID: '{{ .Site.Params.Gitalk.clientID }}',
-    clientSecret: '{{ .Site.Params.Gitalk.clientSecret }}',
-    repo: '{{ .Site.Params.Gitalk.repo }}',
-    owner: '{{ .Site.Params.Gitalk.owner }}',
-    admin: ['{{ .Site.Params.Gitalk.owner }}'],
-    id: hashCode(location.pathname).toString(), // Ensure uniqueness and length less than 50
-    distractionFreeMode: false // Facebook-like distraction free mode
-  });
-  (function () {
-    if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
-      document.getElementById('gitalk-container').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
-      return;
-    }
-    gitalk.render('gitalk-container');
-  })();
+
+  function showComments() {
+    var disqusButton = document.getElementById('disqus-button');
+    disqusButton.parentNode.removeChild(disqusButton);
+
+    const gitalk = new Gitalk({
+      clientID: '{{ .Site.Params.Gitalk.clientID }}',
+      clientSecret: '{{ .Site.Params.Gitalk.clientSecret }}',
+      repo: '{{ .Site.Params.Gitalk.repo }}',
+      owner: '{{ .Site.Params.Gitalk.owner }}',
+      admin: ['{{ .Site.Params.Gitalk.owner }}'],
+      id: hashCode(location.pathname).toString(), // Ensure uniqueness and length less than 50
+      distractionFreeMode: false // Facebook-like distraction free mode
+    });
+    (function () {
+      if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+        document.getElementById('gitalk-container').innerHTML = 'Gitalk comments not available by default when the website is previewed locally.';
+        return;
+      }
+      gitalk.render('gitalk-container');
+    })();
+  }
+
 </script>
 {{ end }}
