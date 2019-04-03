@@ -1,11 +1,12 @@
 {{ $command := .Get "command" }}
 {{ $options := .Get "options" }}
+{{ $captions := .Get "captions" }}
+{{ $captions := split $captions "|" }}
 
 {{ with .Page.Resources.ByType "image" }}
-  {{ range . }}
-
-    {{ $original := . }}
+  {{ range $i, $original := sort . "value" }}
     {{ $new := "" }}
+    {{ $caption := index $captions $i}}
 
     {{ if eq $command "Fit" }}
       {{ $new = $original.Fit $options }}
@@ -19,11 +20,14 @@
       {{ errorf "Invalid image processing command: Must be one of Fit, Fill, Resize, Original." }}
     {{ end }}
 
-    <div class="gallery">
+    <figure role="group" aria-describedby="caption-{{ $caption | md5 }}">
       <a href="{{ $original.Permalink }}" class="img-link">
         <img src="{{ $new.Permalink }}">
       </a>
-    </div>
+      <figcaption id="caption-{{ $caption | md5 }}">
+        {{ $caption | markdownify }}
+      </figcaption>
+    </figure>
 
   {{ end }}
 {{ end }}
